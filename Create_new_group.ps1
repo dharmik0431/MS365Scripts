@@ -44,10 +44,6 @@ try {
 
     #Connecting to AzureAD
     Connect-AzureAD -ErrorAction SilentlyContinue
-
-    <#
-    Running if else block, if the Account is authorized, it will proceed with the script.
-    #>
         
     #logging starts for authentication
     Write-Output "$(Get-TimeStamp) User logged in successfully" | Out-file $logFile -append
