@@ -1,3 +1,25 @@
+<#
+    Designed by: Dharmik Pandya
+    Script: GroupOwnersManager.ps1
+
+    Summary:
+    - Connects to Microsoft Graph
+    - Exports current owners of each Azure AD group listed in a CSV
+    - Adds 3 specified owners to each group
+    - Removes all other owners
+    - Logs all actions and errors, then shows a summary
+
+    CSV Format (groups.csv):
+    GroupName
+    1One1
+    1Two1
+    1Three1
+
+    Notes:
+    - Update the `$ownersToKeep` list with the 3 UPNs to keep as owners
+    - Requires Microsoft Graph PowerShell SDK and appropriate permissions
+#>
+
 # === CONFIGURATION ===
 $inputCsv   = "groups.csv"                             # Input CSV with GroupName column
 $outputDir  = "owners"                                # Directory to export owners
