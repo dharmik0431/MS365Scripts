@@ -1,25 +1,3 @@
-<#
-    Designed by: Dharmik Pandya
-    Script: GroupOwnersManager.ps1
-
-    Summary:
-    - Connects to Microsoft Graph
-    - Exports current owners of each Azure AD group listed in a CSV
-    - Adds 3 specified owners to each group
-    - Removes all other owners
-    - Logs all actions and errors, then shows a summary
-
-    CSV Format (groups.csv):
-    GroupName
-    1One1
-    1Two1
-    1Three1
-
-    Notes:
-    - Update the `$ownersToKeep` list with the 3 UPNs to keep as owners
-    - Requires Microsoft Graph PowerShell SDK and appropriate permissions
-#>
-
 # === CONFIGURATION ===
 $inputCsv   = "groups.csv"                             # Input CSV with GroupName column
 $outputDir  = "owners"                                # Directory to export owners
@@ -55,9 +33,6 @@ if ($total -eq 0) {
     exit
 }
 
-# Load all Azure AD groups once to avoid multiple API calls
-$allGroups = Get-MgGroup -All
-
 # Export current owners of each group to a CSV
 $count = 1
 foreach ($row in $groups) {
@@ -67,7 +42,7 @@ foreach ($row in $groups) {
     Write-Host "`n[$count/$total] $name"
 
     try {
-        $group = $allGroups | Where-Object { $_.DisplayName -eq $name }
+        $group = Get-MgGroup -Filter "displayName eq '$name'" -ErrorAction Stop | Select-Object -First 1
 
         if (-not $group) {
             "Group not found: $name" | Out-File $errorFile -Append
@@ -124,7 +99,7 @@ foreach ($row in $groups) {
     Write-Host "`n[$count/$total] $name"
 
     try {
-        $group = $allGroups | Where-Object { $_.DisplayName -eq $name }
+        $group = Get-MgGroup -Filter "displayName eq '$name'" -ErrorAction Stop | Select-Object -First 1
 
         if (-not $group) {
             "Group not found: $name" | Out-File $errorFile -Append
@@ -178,7 +153,7 @@ $errorCount = if (Test-Path $errorFile) { (Get-Content $errorFile | Where-Object
 Write-Host "`nSummary of operations:"
 Write-Host " → Total groups processed  : $total"
 Write-Host " → Owners exported         : $exportedCount"
-Write-Host " → Errors encountered      : $errorCount"
+Write-Host " → Errors encountered       : $errorCount"
 
 Write-Host "`nAll steps complete. See logs for full details."
 
