@@ -1,6 +1,6 @@
 #Author: Dharmik Pandya
 #Purpose: This script checks which library/folder/file has unique permissions. Exports the output in a CSV file. Logs what was scanned and console output.
-#Pre-Req: The account running the script must be a Site Collection Admin. Need PnP module. Works best with PowerShell 7.
+#Pre-Req: The account running the script must be a Site Collection Admin. Need PnP module. Works best with PowerShell 7. Requires PnP Client ID for auth. 
 
 # Connect to SharePoint
 $siteUrl = "https://hotkilns.sharepoint.com/sites/Shop/"
